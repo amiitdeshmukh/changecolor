@@ -7,6 +7,7 @@
         const [isNumber, setIsNumber]= useState(false);
         const [isChar, setIsChar]= useState(false);
         const [password, setPassword] = useState("")
+        const passwordRef = useRef<HTMLInputElement>(null)  
 
         const passwordGenerator = useCallback((len: number)=>{
             let pass = "";
@@ -27,7 +28,12 @@
             }
 
             setPassword(pass)
-            },[length, isNumber, isChar])
+            },[length, isNumber, isChar])  
+
+        const copyToClipboard = useCallback(()=>{
+            passwordRef.current?.select()
+            window.navigator.clipboard.writeText(password)
+        },[password])
 
             useEffect(()=>{
                 passwordGenerator(length)
@@ -38,8 +44,15 @@
             <div className="flex flex-col justify-center bg-amber-50 px-4 py-4 m-auto w-fit rounded-xl gap-4">
             <h1>Passsword Generator</h1>
             <div className="flex bg-gray-300 rounded-md h-auto justify-between" >
-                <input className="px-4 w-full" type="text" placeholder="password" value={password} readOnly/>
-                <button className="p-2 bg-blue-300 rounded-md hover:bg-blue-400 transition-all duration-300 ease-in-out">Copy</button>
+                <input className="px-4 w-full" 
+                type="text" 
+                placeholder="password" 
+                value={password} 
+                readOnly
+                ref={passwordRef}/>
+                <button className="p-2 bg-blue-300 rounded-md hover:bg-blue-400 transition-all duration-300 ease-in-out"
+                onClick={copyToClipboard}
+                >Copy</button>
             </div>
             <div className="flex gap-4 align-middle">
                 <label htmlFor="">
